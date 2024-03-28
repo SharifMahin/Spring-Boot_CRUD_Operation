@@ -1,0 +1,80 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<!-- scripts import -->
+<script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/4.4.1-1/js/bootstrap.bundle.min.js}"></script>
+<!-- style import -->
+<link th:href="@{/webjars/bootstrap/4.4.1-1/css/bootstrap.css}" rel="stylesheet" />
+<link th:href="@{/css/main.css}" rel="stylesheet" />
+
+<title>変更入力画面</title>
+
+</head>
+<body>
+  <div class="wrap">
+    <main class="bg-gray-light container">
+    <div class="d-flex justify-content-end search-page-top-bar">
+      <h3 class="text-white col-2_5" th:inline="text">ユーザーID: [[${session.user}]]</h3>
+      <a th:href="@{/logout}" class="btn btn-danger col-1_5">ログアウト</a>
+    </div>
+    <div class="alert alert-danger" role="alert" th:if="${msg != null}">
+      <p th:text="${msg}">
+    </div>
+      <div class="card registration-container">
+        <div class="title">
+          <h2 class="text-dark">データ変更確認</h2>
+        </div>
+        <form action="#"th:action="@{/confirmUpdate}" th:object="${updateForm}" method="post">
+          <div class="row mb-3">
+            <label for="id" class="col-sm-3 col-form-label">ID:</label>
+            <div class="col-sm-9">
+              <input type="text" th:field="*{id}" id="id" class="form-control" th:errorclass="is-invalid"  readonly >
+              <div th:if="${#fields.hasErrors('id')}" th:errors="*{id}" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="name" class="col-sm-3 col-form-label">名前:</label>
+            <div class="col-sm-9">
+              <input type="text" th:field="*{name}" id="name" class="form-control" value="test" th:errorclass="is-invalid" readonly >
+              <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="kana" class="col-sm-3 col-form-label">カナ:</label>
+            <div class="col-sm-9">
+              <input type="text" th:field="*{kana}" id="kana" class="form-control" value="test" th:errorclass="is-invalid" readonly >
+              <div th:if="${#fields.hasErrors('kana')}" th:errors="*{kana}" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="kana" class="col-sm-3 col-form-label">生年月日(yyyy/mm/dd):</label>
+            <div class="col-sm-9">
+              <input type="text" th:field="*{birth}" id="birth" class="form-control" value="test" th:errorclass="is-invalid" readonly >
+              <div th:if="${#fields.hasErrors('birth')}" th:errors="*{birth}" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="kana" class="col-sm-3 col-form-label">委員会:</label>
+            <div class="col-sm-9">
+              <input type="text" th:field="*{club}" id="club" class="form-control" value="test" th:errorclass="is-invalid" readonly >
+              <div th:if="${#fields.hasErrors('club')}" th:errors="*{club}" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="registration-button-position">
+            <button id="ConfirmButton" type="submit" class="btn btn-primary" onclick="updateConfirm()" >更新</button>
+            <a class="btn btn-primary" th:href="@{'/update/' +${updateForm.id}}">戻る</a>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+</body>
+<script>
+  function updateConfirm(){
+    var result = confirm("更新しますか?");
+      if (result == false) {
+        event.preventDefault();
+      }
+   }
+</script>
+</html>

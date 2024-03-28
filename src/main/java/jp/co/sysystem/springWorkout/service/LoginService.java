@@ -57,7 +57,9 @@ public class LoginService {
     // ログインIDでユーザー情報を取得
     User u = jrep.findById(loginId);
     if (null != u) {
-      // TODO: ユーザーが取得できた場合、パスワードの検証
+      if (u.getPass().equals(password)) {
+        return u;
+      }
     } else {
       // TODO: 存在しないログインIDだった場合
       log.warn(String.format("指定されたIDは存在しませんでした。[id:%s]", loginId));

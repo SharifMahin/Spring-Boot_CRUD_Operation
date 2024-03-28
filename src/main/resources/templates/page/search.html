@@ -1,0 +1,89 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<!-- scripts import -->
+<script th:src="@{/webjars/jquery/3.5.1/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/4.4.1-1/js/bootstrap.bundle.min.js}"></script>
+<!-- style import -->
+<link th:href="@{/webjars/bootstrap/4.4.1-1/css/bootstrap.css}" rel="stylesheet" />
+<link th:href="@{/css/main.css}" rel="stylesheet" />
+
+<title>検索画面</title>
+
+</head>
+<body>
+  <div class="wrap">
+    <main class="bg-gray-light container">
+    <div class="d-flex justify-content-end search-page-top-bar">
+      <h3 class="text-white col-2_5" th:inline="text">ユーザーID: [[${session.user}]]</h3>
+      <a th:href="@{/logout}" class="btn btn-danger col-1_5">ログアウト</a>
+    </div>
+    <div class="alert alert-primary" role="alert" th:if="${msgSuccess != null}">
+      <p th:text="${msgSuccess}">
+    </div>
+    <div class="alert alert-danger" role="alert" th:if="${msg != null}">
+      <p th:text="${msg}">
+    </div>
+      <div class="title">
+        <h2 class="text-center">社員情報検索</h2>
+        <h4 class="text-center">※前方一致で検索します</h4>
+      </div>
+      <div class="card card-container">
+        <form action="#"th:action="@{/search}" th:object="${searchForm}" method="post">
+	        <div class="row mb-3">
+	          <label for="id" class="col-sm-3 col-form-label">Id</label>
+	          <div class="col-sm-9">
+	            <input type="text" th:field="*{id}" id="id" class="form-control" value="test" th:errorclass="is-invalid" autofocus>
+	            <div th:if="${#fields.hasErrors('id')}" th:errors="*{id}" class="invalid-feedback"></div>
+	          </div>
+	        </div>
+          <div class="row mb-3">
+            <label for="name" class="col-sm-3 col-form-label">名前</label>
+            <div class="col-sm-9">
+              <input type="text" th:field="*{name}" id="name" class="form-control" value="test" th:errorclass="is-invalid" autofocus>
+              <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="kana" class="col-sm-3 col-form-label">カナ</label>
+            <div class="col-sm-9">
+              <input type="text" th:field="*{kana}" id="kana" class="form-control" value="test" th:errorclass="is-invalid" autofocus>
+              <div th:if="${#fields.hasErrors('kana')}" th:errors="*{kana}" class="invalid-feedback"></div>
+            </div>
+          </div>
+          <div class="button-position">
+            <button id="loginButton" type="submit" class="btn btn-primary">検索</button>
+            <a class="btn btn-primary" th:href="@{/registration}">新規登録</a>
+          </div>
+        </form>
+      </div>
+      <div>
+        <table class="table table-bordered table-info table-striped">
+          <thead>
+            <tr th:if="${!#lists.isEmpty(users)}" >
+	            <th>ID</th>
+	            <th>名前</th>
+	            <th>カナ</th>
+              <th>生年月日</th>
+              <th>委員会</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="user: ${users}">
+	            <td th:text="${user.id}" ></td>
+	            <td th:text="${user.name}"></td>
+	            <td th:text="${user.kana}"></td>
+              <td th:text="${user.birth}"></td>
+              <td th:text="${user.club}"></td>
+              <td>
+                <a th:href="@{'/update/'+${user.id}}" class = "btn btn-info">更新</a>
+                <a th:href="@{'/delete/'+${user.id}}" class = "btn btn-danger" >削除</a>
+              </td>
+	          </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

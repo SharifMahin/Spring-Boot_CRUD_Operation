@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import jp.co.sysystem.springWorkout.service.LoginService;
 import jp.co.sysystem.springWorkout.util.MessageUtil;
 import jp.co.sysystem.springWorkout.web.form.LoginForm;
+import jp.co.sysystem.springWorkout.web.form.SearchForm;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -41,8 +42,11 @@ public class LoginController {
   public static final String LOGIN_PROCESS_URL = "/login";
   public static final String LOGOUT_URL = "/logout";
 
+  public static final String SEARCH_URL = "/search";
+
   ///ページ定義
   public static final String LOGIN_PAGE = "page/login";
+  public static final String SEARCH_PAGE = "page/search";
 
   /**
    * ログイン画面表示
@@ -51,7 +55,7 @@ public class LoginController {
   @RequestMapping(value = LOGIN_FORM_URL, method = RequestMethod.GET)
   public String showLoginPage(HttpServletRequest request, Model model) {
     // ログインフォームを格納
-    model.addAttribute("LoginForm", new LoginForm());
+    model.addAttribute("loginForm", new LoginForm());
 
     return LOGIN_PAGE;
   }
@@ -82,17 +86,27 @@ public class LoginController {
 
       // ログインに失敗したら、もう一度ログイン画面
       // ログインフォームを格納
-      model.addAttribute("LoginForm", form);
+      model.addAttribute("loginForm", form);
       return LOGIN_PAGE;
     }
 
     // ログインユーザー情報の正当性判定
     if (null == login.checkLoginUser(form.getId(), form.getPassword())) {
-      // TODO: エラー処理
+      // エラーメッセージをリソースファイルから取得
+      String msg = msgutil.getMessage("login.input");
+      log.debug(msg);
+      // エラーメッセージをリソースファイルから取得
+      model.addAttribute("msg", msg);
+
+      // ログインフォームを格納
+      model.addAttribute("LoginForm", form);
+      return LOGIN_PAGE;
     }
 
-    // TODO: リダイレクトする様に処理を変更する
-    return "遷移先画面の指定";
+    // ログインフォームを格納
+    session.setAttribute("user", form.getId());
+    model.addAttribute("searchForm", new SearchForm());
+    return "redirect:" + SEARCH_URL;
   }
 
   /**
@@ -105,7 +119,7 @@ public class LoginController {
     // 既存セッションを削除
     session.invalidate();
     // 遷移先のログイン画面で使用する空のForm
-    model.addAttribute("LoginForm", new LoginForm());
+    model.addAttribute("loginForm", new LoginForm());
     return LOGIN_PAGE;
   }
 }
